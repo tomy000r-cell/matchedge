@@ -14,7 +14,7 @@ export default async function MatchPage({ params }: PageProps) {
   }
 
   const res = await fetch(
-    https://v3.football.api-sports.io/fixtures?id=${matchId},
+  https://v3.football.api-sports.io/fixtures?id=${matchId},
     {
       headers: {
         "x-apisports-key": process.env.FOOTBALL_API_KEY || "",
