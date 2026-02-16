@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const matchId = context.params.id;
@@ -9,20 +9,13 @@ export async function GET(
   const url =
     "https://v3.football.api-sports.io/fixtures?id=" + matchId;
 
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "x-apisports-key": process.env.API_FOOTBALL_KEY || "",
-      },
-    });
+  const response = await fetch(url, {
+    headers: {
+      "x-apisports-key": process.env.FOOTBALL_API_KEY!,
+    },
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Erreur récupération match" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(data);
 }
