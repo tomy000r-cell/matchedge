@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
+import { BASE_URL, getHeaders } from "@/lib/apiFootball";
 
 export async function GET() {
   try {
-    const response = await fetch("https://v3.football.api-sports.io/fixtures?league=61&season=2024", {
-      headers: {
-        "x-apisports-key": process.env.API_FOOTBALL_KEY!,
-      },
-    });
+    const response = await fetch(
+      ${BASE_URL}fixtures?league=61&season=2024,
+      {
+        headers: getHeaders(),
+        next: { revalidate: 3600 },
+      }
+    );
 
     const data = await response.json();
 
