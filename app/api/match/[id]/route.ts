@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const matchId = context.params.id;
+  const { id } = await params;
 
   const url =
-    "https://v3.football.api-sports.io/fixtures?id=" + matchId;
+    "https://v3.football.api-sports.io/fixtures?id=" + id;
 
   const response = await fetch(url, {
     headers: {
