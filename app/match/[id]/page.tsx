@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface PageProps {
   params: {
@@ -6,8 +6,12 @@ interface PageProps {
   };
 }
 
-export default async function MatchDetailPage({ params }: PageProps) {
+export default async function MatchPage({ params }: PageProps) {
   const matchId = params.id;
+
+  if (!matchId) {
+    return notFound();
+  }
 
   const res = await fetch(
     https://v3.football.api-sports.io/fixtures?id=${matchId},
@@ -19,108 +23,39 @@ export default async function MatchDetailPage({ params }: PageProps) {
     }
   );
 
-  const data = await res.json();
-  const match = data.response[0];
-
-  if (!match) {
-    return (
-      <div style={{ padding: "40px", color: "white" }}>
-        Match introuvable.
-      </div>
-    );
+  if (!res.ok) {
+    throw new Error("Erreur lors de la récupération du match");
   }
 
+  const data = await res.json();
+
+  if (!data.response || data.response.length === 0) {
+    return notFound();
+  }
+
+  const match = data.response[0];
+
+  const homeTeam = match.teams.home.name;
+  const awayTeam = match.teams.away.name;
+  const homeGoals = match.goals.home;
+  const awayGoals = match.goals.away;
+  const status = match.fixture.status.long;
+  const date = new Date(match.fixture.date).toLocaleString();
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0f172a",
-        color: "white",
-        padding: "40px",
-        fontFamily: "Arial",
-      }}
-    >
-      <Link href="/matchs" style={{ color: "#38bdf8" }}>
-        ← Retour aux matchs
-      </Link>
+    <div style={{ padding: "40px", fontFamily: "Arial" }}>
+      <h1>Match Details</h1>
 
-      <h1 style={{ textAlign: "center", marginTop: "30px" }}>
-        {match.teams.home.name} vs {match.teams.away.name}
-      </h1>
+      <h2>
+        {homeTeam} vs {awayTeam}
+      </h2>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "40px",
-          marginTop: "40px",
-        }}
-      >
-        {/* HOME */}
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              width: "90px",
-              height: "90px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto",
-            }}
-          >
-            <img
-              src={match.teams.home.logo}
-              alt={match.teams.home.name}
-              style={{
-                maxWidth: "80px",
-                maxHeight: "80px",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-          <p>{match.teams.home.name}</p>
-        </div>
+      <p><strong>Date :</strong> {date}</p>
+      <p><strong>Status :</strong> {status}</p>
 
-        {/* SCORE */}
-        <div style={{ fontSize: "32px", fontWeight: "bold" }}>
-          {match.goals.home ?? "-"} : {match.goals.away ?? "-"}
-        </div>
-
-        {/* AWAY */}
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              width: "90px",
-              height: "90px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto",
-            }}
-          >
-            <img
-              src={match.teams.away.logo}
-              alt={match.teams.away.name}
-              style={{
-                maxWidth: "80px",
-                maxHeight: "80px",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-          <p>{match.teams.away.name}</p>
-        </div>
-      </div>
-
-      <div style={{ textAlign: "center", marginTop: "40px" }}>
-        <p>Stade : {match.fixture.venue.name}</p>
-        <p>Ville : {match.fixture.venue.city}</p>
-        <p>
-          Date :{" "}
-          {new Date(match.fixture.date).toLocaleDateString("fr-FR")}
-        </p>
-      </div>
+      <h3>
+        Score : {homeGoals} - {awayGoals}
+      </h3>
     </div>
   );
 }
