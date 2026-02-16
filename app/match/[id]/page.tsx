@@ -19,43 +19,42 @@ export default async function MatchPage({ params }: PageProps) {
       headers: {
         "x-apisports-key": process.env.FOOTBALL_API_KEY!,
       },
-      cache: "no-store",
+      next: { revalidate: 60 },
     }
   );
 
   if (!res.ok) {
-    throw new Error("Erreur lors de la récupération du match");
+    throw new Error("Erreur lors du chargement du match");
   }
 
   const data = await res.json();
+  const match = data.response?.[0];
 
-  if (!data.response || data.response.length === 0) {
+  if (!match) {
     return notFound();
   }
 
-  const match = data.response[0];
-
-  const homeTeam = match.teams.home.name;
-  const awayTeam = match.teams.away.name;
-  const homeGoals = match.goals.home;
-  const awayGoals = match.goals.away;
-  const status = match.fixture.status.long;
-  const date = new Date(match.fixture.date).toLocaleString();
-
   return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
-      <h1>Match Details</h1>
+    <div style={{ padding: "20px", color: "white" }}>
+      <h1>
+        {match.teams.home.name} vs {match.teams.away.name}
+      </h1>
 
       <h2>
-        {homeTeam} vs {awayTeam}
+        {match.goals.home} - {match.goals.away}
       </h2>
 
-      <p><strong>Date :</strong> {date}</p>
-      <p><strong>Status :</strong> {status}</p>
+      <p>Status : {match.fixture.status.long}</p>
 
-      <h3>
-        Score : {homeGoals} - {awayGoals}
-      </h3>
+      <p>Date : {new Date(match.fixture.date).toLocaleString()}</p>
+
+      <hr />
+
+      <h3>Stade</h3>
+      <p>{match.fixture.venue.name}</p>
+
+      <h3>Ligue</h3>
+      <p>{match.league.name}</p>
     </div>
   );
 }
