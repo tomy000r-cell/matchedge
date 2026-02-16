@@ -11,7 +11,8 @@ export default async function MatchPage({
     notFound();
   }
 
-  const url = `https://v3.football.api-sports.io/fixtures?id=${matchId}`;
+  const url = "https://v3.football.api-sports.io/fixtures?id=${matchId}";
+>>>>>>> 97fa408525678ad47035a944d6a5305d63044047
 
   const res = await fetch(url, {
     headers: {
