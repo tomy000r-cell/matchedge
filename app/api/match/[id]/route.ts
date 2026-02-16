@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const matchId = params.id;
+  const matchId = context.params.id;
 
   const url =
     "https://v3.football.api-sports.io/fixtures?id=" + matchId;
