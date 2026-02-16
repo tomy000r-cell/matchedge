@@ -1,45 +1,45 @@
 import { notFound } from "next/navigation";
 
 export default async function MatchPage({
-  params,
+params,
 }: {
-  params: { id: string };
+params: { id: string };
 }) {
-  const matchId = params.id;
+const matchId = params.id;
 
-  if (!matchId) {
-    notFound();
-  }
+if (!matchId) {
+notFound();
+}
 
-  const url = "https://v3.football.api-sports.io/fixtures?id=${matchId}";
->>>>>>> 97fa408525678ad47035a944d6a5305d63044047
+// ✅ URL corrigée avec backticks
+const url = `https://v3.football.api-sports.io/fixtures?id=${matchId}`;
 
-  const res = await fetch(url, {
-    headers: {
-      "x-apisports-key": process.env.FOOTBALL_API_KEY || "",
-    },
-    cache: "no-store",
-  });
+const res = await fetch(url, {
+headers: {
+"x-apisports-key": process.env.FOOTBALL_API_KEY || "",
+},
+cache: "no-store",
+});
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch match data");
-  }
+if (!res.ok) {
+throw new Error("Failed to fetch match data");
+}
 
-  const data = await res.json();
-  const match = data?.response?.[0];
+const data = await res.json();
+const match = data?.response?.[0];
 
-  if (!match) {
-    notFound();
-  }
+if (!match) {
+notFound();
+}
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>
-        {match.teams.home.name} vs {match.teams.away.name}
-      </h1>
-      <h2>
-        {match.goals.home} - {match.goals.away}
-      </h2>
-    </div>
-  );
+return (
+<div style={{ padding: 20 }}>
+<h1>
+{match.teams.home.name} vs {match.teams.away.name}
+</h1>
+<h2>
+{match.goals.home} - {match.goals.away}
+</h2>
+</div>
+);
 }
