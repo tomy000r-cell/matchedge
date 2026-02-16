@@ -1,27 +1,24 @@
 import { notFound } from "next/navigation";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default async function MatchPage({ params }: PageProps) {
+export default async function MatchPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const matchId = params.id;
 
   if (!matchId) {
     notFound();
   }
 
-  const res = await fetch(
-  https://v3.football.api-sports.io/fixtures?id=${matchId},
-    {
-      headers: {
-        "x-apisports-key": process.env.FOOTBALL_API_KEY || "",
-      },
-      cache: "no-store",
-    }
-  );
+  const url = https://v3.football.api-sports.io/fixtures?id=${matchId};
+
+  const res = await fetch(url, {
+    headers: {
+      "x-apisports-key": process.env.FOOTBALL_API_KEY || "",
+    },
+    cache: "no-store",
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch match data");
@@ -39,17 +36,9 @@ export default async function MatchPage({ params }: PageProps) {
       <h1>
         {match.teams.home.name} vs {match.teams.away.name}
       </h1>
-
       <h2>
         {match.goals.home} - {match.goals.away}
       </h2>
-
-      <p>Status: {match.fixture.status.long}</p>
-      <p>
-        Date: {new Date(match.fixture.date).toLocaleString("fr-FR")}
-      </p>
-      <p>Stadium: {match.fixture.venue.name}</p>
-      <p>League: {match.league.name}</p>
     </div>
   );
 }
