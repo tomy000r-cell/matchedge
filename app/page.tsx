@@ -4,15 +4,34 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [standings, setStandings] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/standings")
       .then((res) => res.json())
       .then((data) => {
-        const table = data.response[0].league.standings[0];
+        // ✅ Sécurisation complète
+        const table = data?.response?.[0]?.league?.standings?.[0];
+
+        if (!table) {
+          setError("Impossible de charger le classement.");
+          return;
+        }
+
         setStandings(table);
+      })
+      .catch(() => {
+        setError("Erreur lors du chargement des données.");
       });
   }, []);
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500 mt-10">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -36,48 +55,48 @@ export default function Home() {
           <tbody>
             {standings.map((team) => (
               <tr
-                key={team.team.id}
+                key={team?.team?.id}
                 className="border-b border-gray-700 hover:bg-gray-700/40 transition duration-200"
               >
                 <td className="px-4 py-4 font-bold text-gray-300">
-                  {team.rank}
+                  {team?.rank}
                 </td>
 
                 <td className="px-4 py-4 flex items-center gap-3 font-medium">
                   <img
-                    src={team.team.logo}
-                    alt={team.team.name}
+                    src={team?.team?.logo}
+                    alt={team?.team?.name}
                     className="w-7 h-7"
                   />
-                  {team.team.name}
+                  {team?.team?.name}
                 </td>
 
                 <td className="px-4 py-4 text-center font-bold text-white">
-                  {team.points}
+                  {team?.points}
                 </td>
 
                 <td className="px-4 py-4 text-center text-green-400">
-                  {team.all.win}
+                  {team?.all?.win}
                 </td>
 
                 <td className="px-4 py-4 text-center text-yellow-400">
-                  {team.all.draw}
+                  {team?.all?.draw}
                 </td>
 
                 <td className="px-4 py-4 text-center text-red-400">
-                  {team.all.lose}
+                  {team?.all?.lose}
                 </td>
 
                 <td className="px-4 py-4 text-center">
                   <span
                     className={
-                      team.goalsDiff >= 0
+                      team?.goalsDiff >= 0
                         ? "text-green-400 font-semibold"
                         : "text-red-400 font-semibold"
                     }
                   >
-                    {team.goalsDiff > 0 ? "+" : ""}
-                    {team.goalsDiff}
+                    {team?.goalsDiff > 0 ? "+" : ""}
+                    {team?.goalsDiff}
                   </span>
                 </td>
               </tr>
