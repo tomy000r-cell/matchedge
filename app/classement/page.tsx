@@ -1,4 +1,14 @@
-async function getClassement() {
+type TeamType = {
+  rank: number;
+  points: number;
+  team: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+};
+
+async function getClassement(): Promise<TeamType[]> {
   const res = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/standings", {
     cache: "no-store"
   });
@@ -19,7 +29,7 @@ async function getClassement() {
 }
 
 export default async function ClassementPage() {
-  const classement = await getClassement();
+  const classement: TeamType[] = await getClassement();
 
   return (
     <div style={{ padding: "20px" }}>
@@ -27,7 +37,7 @@ export default async function ClassementPage() {
 
       {classement.length === 0 && <p>Aucun classement disponible</p>}
 
-      {classement.map(function (team) {
+      {classement.map(function (team: TeamType) {
         return (
           <div
             key={team.team.id}
