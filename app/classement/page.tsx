@@ -1,8 +1,5 @@
-export default function ClassementPage() {
-return (
-<div style={{ padding: 40 }}>
+<div>
 Classement Ligue 1
-Page chargée correctement.
-
+</div>
 );
 }
