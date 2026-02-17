@@ -1,8 +1,8 @@
-export default function Home() {
-  return (
-    <div style={{ padding: "40px" }}>
-      <h1>Accueil 🔥</h1>
-      <p>Test simple.</p>
-    </div>
-  );
+export default function HomePage() {
+return (
+<div style={{ padding: “40px” }}>
+Accueil 🔥
+Test simple.
+
+);
 }
