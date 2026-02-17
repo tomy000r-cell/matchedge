@@ -9,23 +9,27 @@ type TeamType = {
 };
 
 async function getClassement(): Promise<TeamType[]> {
-  const res = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/standings", {
-    cache: "no-store"
-  });
+  try {
+    const res = await fetch("https://matchedge.vercel.app/api/standings", {
+      cache: "no-store"
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (
-    data.response &&
-    data.response[0] &&
-    data.response[0].league &&
-    data.response[0].league.standings &&
-    Array.isArray(data.response[0].league.standings[0])
-  ) {
-    return data.response[0].league.standings[0];
+    if (
+      data.response &&
+      data.response[0] &&
+      data.response[0].league &&
+      data.response[0].league.standings &&
+      Array.isArray(data.response[0].league.standings[0])
+    ) {
+      return data.response[0].league.standings[0];
+    }
+
+    return [];
+  } catch {
+    return [];
   }
-
-  return [];
 }
 
 export default async function ClassementPage() {
