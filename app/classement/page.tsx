@@ -9,12 +9,13 @@ const [loading, setLoading] = useState(true);
 useEffect(() => {
 async function loadClassement() {
 try {
-const res = await fetch(”/api/classement”);
+const res = await fetch(”/api/standings”);
 const data = await res.json();
-if (
+      if (
       data.response &&
       data.response[0] &&
       data.response[0].league &&
+      data.response[0].league.standings &&
       Array.isArray(data.response[0].league.standings[0])
     ) {
       setClassement(data.response[0].league.standings[0]);
@@ -30,7 +31,7 @@ if (
 }
 
 loadClassement();
-}, []);
+      }, []);
 
 if (loading) {
 return <p style={{ padding: “20px” }}>Chargement…;
@@ -39,35 +40,37 @@ return <p style={{ padding: “20px” }}>Chargement…;
 return (
 <div style={{ padding: “20px” }}>
 Classement Ligue 1
-{classement.length === 0 && <p>Aucun classement disponible</p>}
+      {classement.length === 0 && <p>Aucun classement disponible</p>}
 
-  {classement.map((team) => (
-    <div
-      key={team.team.id}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "15px",
-        marginBottom: "10px",
-        padding: "8px",
-        borderBottom: "1px solid #ddd"
-      }}
-    >
-      <strong>{team.rank}</strong>
+  {classement.map(function(team) {
+    return (
+      <div
+        key={team.team.id}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px",
+          marginBottom: "10px",
+          padding: "8px",
+          borderBottom: "1px solid #ddd"
+        }}
+      >
+        <strong>{team.rank}</strong>
 
-      <img
-        src={team.team.logo}
-        alt={team.team.name}
-        width="30"
-      />
+        <img
+          src={team.team.logo}
+          alt={team.team.name}
+          width="30"
+        />
 
-      <span>{team.team.name}</span>
+        <span>{team.team.name}</span>
 
-      <span style={{ marginLeft: "auto" }}>
-        {team.points} pts
-      </span>
-    </div>
-  ))}
+        <span style={{ marginLeft: "auto" }}>
+          {team.points} pts
+        </span>
+      </div>
+    );
+  })}
 </div>
-);
+      );
 }
