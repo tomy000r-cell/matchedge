@@ -4,12 +4,12 @@ import React from “react”;
 export default function RootLayout(props: { children: React.ReactNode }) {
 return (
 
-<body style={{ margin: 0, fontFamily: “Arial, sans-serif” }}>
+<body style={{ margin: 0 }}>
 <nav
 style={{
 display: “flex”,
-gap: “20px”,
-padding: “20px”,
+gap: 20,
+padding: 20,
 borderBottom: “1px solid #ddd”
 }}
 
