@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "MatchEdge",
+  description: "Plateforme football premium",
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -5,7 +10,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body>
+      <body style={{ margin: 0, fontFamily: "Arial", background: "#0f172a", color: "white" }}>
         {children}
       </body>
     </html>
