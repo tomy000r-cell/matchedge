@@ -1,4 +1,6 @@
 export default function Dashboard() {
+  const isPremium = false // ⚠️ Pour l’instant tout le monde est gratuit
+
   return (
     <div style={{ display: "flex" }}>
 
@@ -16,17 +18,58 @@ export default function Dashboard() {
         
         <h1 style={{ color: "#00ff88" }}>Dashboard</h1>
 
+        {/* SECTION GRATUITE */}
         <div className="card" style={{ marginTop: "30px" }}>
           <h3>Résumé du compte</h3>
           <p>Abonnement : Gratuit</p>
           <p>Prédictions disponibles : 3 / 10</p>
         </div>
 
-        <div className="card" style={{ marginTop: "20px" }}>
-          <h3>Performance</h3>
-          <p>Taux de réussite : 68%</p>
-          <p>Profit estimé : +12.4%</p>
+        {/* SECTION PREMIUM */}
+        <div
+          className="card"
+          style={{
+            marginTop: "30px",
+            position: "relative",
+            filter: isPremium ? "none" : "blur(4px)",
+            pointerEvents: isPremium ? "auto" : "none"
+          }}
+        >
+          <h3>🔥 Prédictions Premium 100%</h3>
+          <p>Match 1 : Victoire domicile</p>
+          <p>Match 2 : Over 2.5</p>
+          <p>Match 3 : BTTS Oui</p>
         </div>
+
+        {!isPremium && (
+          <div style={{ marginTop: "-120px", textAlign: "center" }}>
+            <div style={{
+              background: "#111",
+              padding: "20px",
+              borderRadius: "10px",
+              border: "1px solid #00ff88",
+              display: "inline-block"
+            }}>
+              <h3 style={{ color: "#00ff88" }}>🔒 Accès Premium</h3>
+              <p>Débloquez les prédictions exclusives</p>
+
+              <a
+                href="TON_LIEN_REVOLUT_ICI"
+                target="_blank"
+                style={{
+                  background: "#00ff88",
+                  padding: "10px 20px",
+                  borderRadius: "6px",
+                  color: "#000",
+                  textDecoration: "none",
+                  fontWeight: "bold"
+                }}
+              >
+                Payer avec Revolut
+              </a>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
