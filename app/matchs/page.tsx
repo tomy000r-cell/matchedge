@@ -15,17 +15,21 @@ type MatchType = {
 };
 
 async function getMatchs(): Promise<MatchType[]> {
-  const res = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/matchs", {
-    cache: "no-store"
-  });
+  try {
+    const res = await fetch("https://matchedge.vercel.app/api/matchs", {
+      cache: "no-store"
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.response && Array.isArray(data.response)) {
-    return data.response;
+    if (data.response && Array.isArray(data.response)) {
+      return data.response;
+    }
+
+    return [];
+  } catch {
+    return [];
   }
-
-  return [];
 }
 
 export default async function MatchsPage() {
