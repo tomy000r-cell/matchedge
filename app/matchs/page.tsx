@@ -1,4 +1,20 @@
-async function getMatchs() {
+type MatchType = {
+  fixture: {
+    id: number;
+  };
+  teams: {
+    home: {
+      name: string;
+      logo: string;
+    };
+    away: {
+      name: string;
+      logo: string;
+    };
+  };
+};
+
+async function getMatchs(): Promise<MatchType[]> {
   const res = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/matchs", {
     cache: "no-store"
   });
@@ -13,7 +29,7 @@ async function getMatchs() {
 }
 
 export default async function MatchsPage() {
-  const matchs = await getMatchs();
+  const matchs: MatchType[] = await getMatchs();
 
   return (
     <div style={{ padding: "20px" }}>
@@ -21,7 +37,7 @@ export default async function MatchsPage() {
 
       {matchs.length === 0 && <p>Aucun match trouvé</p>}
 
-      {matchs.map(function (match) {
+      {matchs.map(function (match: MatchType) {
         return (
           <div
             key={match.fixture.id}
