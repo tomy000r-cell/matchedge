@@ -1,4 +1,16 @@
+"use client"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 export default function Dashboard() {
+  const router = useRouter()
+
+useEffect(() => {
+  const isLogged = localStorage.getItem("isLogged")
+
+  if (!isLogged) {
+    router.push("/login")
+  }
+}, [])
   const isPremium = false // ⚠️ Pour l’instant tout le monde est gratuit
 
   return (
