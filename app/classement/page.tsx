@@ -1,76 +1,61 @@
-“use client”;
+async function getClassement() {
+  const res = await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api/standings", {
+    cache: "no-store"
+  });
 
-import { useEffect, useState } from “react”;
+  const data = await res.json();
 
-export default function ClassementPage() {
-const [classement, setClassement] = useState([]);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-async function loadClassement() {
-try {
-const res = await fetch(”/api/standings”);
-const data = await res.json();
-      if (
-      data.response &&
-      data.response[0] &&
-      data.response[0].league &&
-      data.response[0].league.standings &&
-      Array.isArray(data.response[0].league.standings[0])
-    ) {
-      setClassement(data.response[0].league.standings[0]);
-    } else {
-      setClassement([]);
-    }
-  } catch (error) {
-    console.error("Erreur classement:", error);
-    setClassement([]);
-  } finally {
-    setLoading(false);
+  if (
+    data.response &&
+    data.response[0] &&
+    data.response[0].league &&
+    data.response[0].league.standings &&
+    Array.isArray(data.response[0].league.standings[0])
+  ) {
+    return data.response[0].league.standings[0];
   }
+
+  return [];
 }
 
-loadClassement();
-      }, []);
+export default async function ClassementPage() {
+  const classement = await getClassement();
 
-if (loading) {
-return <p style={{ padding: “20px” }}>Chargement…;
-}
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>Classement Ligue 1</h1>
 
-return (
-<div style={{ padding: “20px” }}>
-Classement Ligue 1
       {classement.length === 0 && <p>Aucun classement disponible</p>}
 
-  {classement.map(function(team) {
-    return (
-      <div
-        key={team.team.id}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "15px",
-          marginBottom: "10px",
-          padding: "8px",
-          borderBottom: "1px solid #ddd"
-        }}
-      >
-        <strong>{team.rank}</strong>
+      {classement.map(function (team) {
+        return (
+          <div
+            key={team.team.id}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "15px",
+              marginBottom: "10px",
+              padding: "8px",
+              borderBottom: "1px solid #ddd"
+            }}
+          >
+            <strong>{team.rank}</strong>
 
-        <img
-          src={team.team.logo}
-          alt={team.team.name}
-          width="30"
-        />
+            <img
+              src={team.team.logo}
+              alt={team.team.name}
+              width="30"
+            />
 
-        <span>{team.team.name}</span>
+            <span>{team.team.name}</span>
 
-        <span style={{ marginLeft: "auto" }}>
-          {team.points} pts
-        </span>
-      </div>
-    );
-  })}
-</div>
-      );
+            <span style={{ marginLeft: "auto" }}>
+              {team.points} pts
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
